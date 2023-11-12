@@ -5,12 +5,12 @@ import {
 import './App.css'
 
 // Pages
-import Booking from './pages/booking/'
+import Home from './pages/home'
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Booking />,
+    element: <Home />,
   },
 ]);
 
