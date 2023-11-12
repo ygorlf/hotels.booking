@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 // Components
-import BookingCard from '../../components/bookingCard';
+import HotelCard from '../../components/hotelCard';
 
 const Page = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const HotelsList = styled.ul`
   }
 `;
 
-const Booking = () => {
+const Home = () => {
   const [hotels, setHotels] = useState([]);
 
   const fetchHotels = async () => {
@@ -47,7 +47,7 @@ const Booking = () => {
 
   const renderHotels = () => {
     return hotels.map((hotel) => (
-      <BookingCard hotel={hotel} />
+      <HotelCard hotel={hotel} />
     ))
   }
 
@@ -60,4 +60,4 @@ const Booking = () => {
   )
 };
 
-export default Booking;
+export default Home;

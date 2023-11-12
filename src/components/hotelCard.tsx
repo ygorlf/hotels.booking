@@ -9,10 +9,14 @@ import tourIcon from '../assets/tour.png'
 import Stars from './stars'
 
 // Types
-import { Booking } from '../types/booking'
+import { Hotel } from '../types'
 
 type Props = {
-  hotel: Booking;
+  hotel: Hotel;
+}
+
+type BoxProps = {
+  hasOpacity?: boolean;
 }
 
 const Container = styled.li`
@@ -88,7 +92,7 @@ const City = styled.span`
   color: var(--app-text);
 `;
 
-const Box = styled.div`
+const Box = styled.div<BoxProps>`
   display: flex;
   align-items: center;
   margin: 1rem 0;
@@ -121,7 +125,7 @@ const Field = styled.span`
 `;
 
 
-const BookingCard = (props: Props) => {
+const HotelCard = (props: Props) => {
   const { hotel } = props;
 
   const formatPrice = (value: number) => (
@@ -165,4 +169,4 @@ const BookingCard = (props: Props) => {
   )
 }
 
-export default BookingCard;
+export default HotelCard;
