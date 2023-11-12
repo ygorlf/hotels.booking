@@ -9,7 +9,7 @@ import { hotelsData } from './data/hotels';
 export const handlers = [
   http.get('/hotels', (req, res, ctx) => {
     return HttpResponse.json({
-      ...hotelsData,
+      hotels: [...hotelsData],
     })
   }),
   http.post('/reserve', (req, res, ctx) => {

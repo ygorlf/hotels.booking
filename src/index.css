@@ -7,4 +7,16 @@
 body {
   margin: 0;
   padding: 0;
+
+  --app-white: #ffffff;
+  --app-white-transparent: #ffffff4D;
+  --app-light: #FFDAB9;
+  --app-light-transparent: #FFDAB94D;
+  --app-light-second: #FBC4AB;
+  --app-medium: #F8AD9D;
+  --app-medium-second: #F4978E;
+  --app-dark: #F08080;
+  --app-dark-transparent: #F0808080;
+  --app-text: #432818;
+  --app-error: #ff0347;
 }
