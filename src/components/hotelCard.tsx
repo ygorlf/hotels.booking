@@ -35,6 +35,10 @@ const Container = styled.li`
   &:hover {
     transform: scale(1.02);
     box-shadow: 0 0 1rem var(--app-white);
+
+    button {
+      display: initial;
+    }
   }
 
   @media (max-width: 667px) {
@@ -124,6 +128,32 @@ const Field = styled.span`
   color: var(--app-text);
 `;
 
+const BookingButton = styled.button`
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  display: none;
+  padding: .25rem .75rem;
+  border: 2px solid var(--app-dark);
+  border-radius: 8px;
+  background-color: transparent;
+  font: 400 1rem 'Roboto', sans-serif;
+  color: var(--app-dark);
+  cursor: pointer;
+  outline: none;
+  transition: all .2s;
+
+  &:hover {
+    background-color: var(--app-dark);
+    color: var(--app-white);
+    box-shadow: 2px 2px 8px var(--app-dark-transparent);
+  }
+
+  @media (max-width: 480px) {
+    display: initial;
+  }
+`;
+
 
 const HotelCard = (props: Props) => {
   const { hotel } = props;
@@ -165,6 +195,9 @@ const HotelCard = (props: Props) => {
           <Field>Tour included</Field>
         </Box>
       </DetailsBox>
+      <BookingButton onClick={() => true}>
+        booking
+      </BookingButton>
     </Container>
   )
 }
