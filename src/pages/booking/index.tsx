@@ -1,46 +1,136 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Calendar from 'react-calendar';
+
+import 'react-calendar/dist/Calendar.css';
 
 // Types
 import { Hotel } from '../../types';
 import Stars from '../../components/stars';
 
 type HotelType = Hotel;
+type ValuePiece = Date;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
+
+type ButtonProps = {
+  isDisabled: boolean;
+}
 
 const Page = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(0deg, var(--app-dark) -10%, var(--app-light) 100%);
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 80%;
+  margin: 0 auto;
+  padding: 2rem;
+  
+  .react-calendar {
+    width: calc(100% - 22rem);
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffffdd;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    color: var(--app-text);
+    box-shadow: 0 0 12px #00000033;
+    overflow: hidden;
+  }
+
+  .react-calendar__navigation {
+    height: 4rem;
+  }
+
+  .react-calendar__navigation__arrow {
+    width: 5rem;
+    font-size: 1.25rem;
+  }
+
+  .react-calendar__navigation__label__labelText {
+    font-size: 1.25rem;
+    font-family: 'Roboto', sans-serif;
+    color: var(--app-text);
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    text-transform: lowercase;
+
+    abbr {
+      text-decoration: none;
+    }
+  }
+
+  .react-calendar__month-view__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    height: calc(100vh - 24rem);
+  }
+
+  .react-calendar__tile--now {
+    background-color: var(--app-light);
+  }
+
+  .react-calendar__tile--active {
+    background-color: var(--app-dark);
+  }
+
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+    background: var(--app-medium);
+  }
+`;
+
+const Header = styled.header`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  min-height: 100vh;
-  padding: 4rem 0;
-  background: linear-gradient(0deg, var(--app-dark) -10%, var(--app-light) 100%);
+  width: 100%;
+  height: 3rem;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h2`
+  margin: 0;
+  color: #505050;
+  font: 400 2rem 'Open Sans', sans-serif;
 `;
 
 const Content = styled.div`
   position: relative;
-  width:70%;
-  padding: 1.5rem;
+  width: 20rem;
+  margin-right: 2rem;
+  padding-bottom: 2rem;
   border-radius: 8px;
   background-color: var(--app-white);
   box-shadow: 0 0 12px #00000033;
+  overflow: hidden;
 `;
 
-const BoxDetails = styled.div`
-  display: flex;
+const CoverImage = styled.div`
+  width: 100%;
+  height: 12rem;
+  overflow: hidden;
 `;
 
-const CoverImage = styled.img`
-  width: 35%;
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   margin-right: 2rem;
-  border-radius: 5px;
   box-shadow: 2px 2px 4px #00000022;
 `;
 
 const Box = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 1rem;
 `;
 
 const HotelName = styled.h2`
@@ -69,15 +159,31 @@ const Span = styled.span`
   color: var(--app-text);
 `;
 
-const Line = styled.hr`
-  width: 100%;
-  margin: 1rem 0;
-  border-top: 1px solid var(--app-dark);
+const BookingButton = styled.button<ButtonProps>`
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: .75rem 1rem;
+  border: 2px solid var(--app-dark);
+  border-radius: 8px;
+  font: 400 1rem 'Roboto', sans-serif;
+  cursor: pointer;
+  outline: none;
+  color: var(--app-white);
+  transition: all .2s;
+  box-shadow: 2px 2px 8px var(--app-dark-transparent);
+  background-color: var(--app-dark);
+
+  ${({ isDisabled }) => isDisabled &&`
+    cursor: initial;
+    opacity: 0.5;
+  `}
 `;
 
 const Booking = () => {
   const [hotel, setHotel] = useState<HotelType>({} as HotelType);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [value, onChange] = useState<Value>(new Date());
 
   const { id } = useParams();
 
@@ -91,7 +197,6 @@ const Booking = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      console.log(err);
     }
   };
 
@@ -99,35 +204,44 @@ const Booking = () => {
     fetchHotel();
   }, []);
 
-  const renderHotel = () => {
+  const renderContent = () => {
     return (
-      <>
-        <Link to={'/'}>Back</Link>
+      <Container>
+        <Header>
+          <Title>Booking Dates</Title>
+          <BookingButton isDisabled={!Array.isArray(value)}>
+            Booking
+          </BookingButton>
+        </Header>
         <Content onClick={ev => ev.stopPropagation()}>
-          <BoxDetails>
-            <CoverImage src={hotel.photo} alt='imagem do hotel' />
-            <Box>
-              <Stars
-                classification={hotel.classification}
-                width='1.5rem'
-              />
-              <HotelName>{hotel.name}</HotelName>
-              <Label>{hotel.city} - {hotel.state}</Label>
-              <Row>
-                <Span>{hotel.address}</Span>
-              </Row>
-            </Box>
-          </BoxDetails>
-          <Line />
+          <CoverImage>
+            <Image src={hotel.photo} alt='imagem do hotel' />
+          </CoverImage>
+          <Box>
+            <Stars
+              classification={hotel.classification}
+              width='1.5rem'
+            />
+            <HotelName>{hotel.name}</HotelName>
+            <Label>{hotel.city} - {hotel.state}</Label>
+            <Row>
+              <Span>{hotel.address}</Span>
+            </Row>
+          </Box>
         </Content>
-      </>
+        <Calendar
+          onChange={onChange}
+          minDate={new Date()}
+          selectRange={true}
+        />
+      </Container>
     )
   }
 
   return (
     <Page>
       {isLoading && 'Loading'}
-      {!isLoading && renderHotel()}
+      {!isLoading && renderContent()}
     </Page>
   )
 };
