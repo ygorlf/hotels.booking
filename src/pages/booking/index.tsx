@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
+
+// Images
+import loading from '../../assets/loading.svg';
+import back from '../../assets/back.svg';
 
 // Types
 import { Hotel } from '../../types';
 import Stars from '../../components/stars';
 
 type HotelType = Hotel;
-type ValuePiece = Date;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+type ValueDate = Date;
+type Value = ValueDate[];
 
 type ButtonProps = {
   isDisabled: boolean;
@@ -89,7 +93,7 @@ const Container = styled.div`
 const Header = styled.header`
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 3rem;
@@ -100,6 +104,19 @@ const Title = styled.h2`
   margin: 0;
   color: #505050;
   font: 400 2rem 'Open Sans', sans-serif;
+`;
+
+const Back = styled.button`
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  cursor: pointer;
+  background: url(${back}) no-repeat center;
+  background-size: contain;
+`;
+
+const Loading = styled.img`
+  width: 3rem;
 `;
 
 const Content = styled.div`
@@ -160,9 +177,6 @@ const Span = styled.span`
 `;
 
 const BookingButton = styled.button<ButtonProps>`
-  position: absolute;
-  right: 0;
-  top: 0;
   padding: .75rem 1rem;
   border: 2px solid var(--app-dark);
   border-radius: 8px;
@@ -182,9 +196,11 @@ const BookingButton = styled.button<ButtonProps>`
 
 const Booking = () => {
   const [hotel, setHotel] = useState<HotelType>({} as HotelType);
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [value, onChange] = useState<Value>(new Date());
+  const [isLoading, setLoading] = useState(false);
+  const [isBooking, setBooking] = useState(false);
+  const [value, onChange] = useState<Value>([new Date()]);
 
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const fetchHotel = async () => {
@@ -200,6 +216,34 @@ const Booking = () => {
     }
   };
 
+  const createBooking = async () => {
+    try {
+      setBooking(true);
+
+      const days =  Math.abs(
+        Math.floor((value[0].getTime() - value[1].getTime()) / 86400000)
+      );
+
+      await fetch(`${import.meta.env.VITE_API_URL}/booking/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          hotelId: id,
+          price: hotel.price * days,
+          startDate: value[0],
+          endDate: value[1],
+        })
+      });
+
+      setBooking(false);
+    } catch (err) {
+      setBooking(false);
+    }
+  }
+
+  const handleBack = () => {
+    navigate(-1);
+  }
+
   useEffect(() => {
     fetchHotel();
   }, []);
@@ -208,10 +252,19 @@ const Booking = () => {
     return (
       <Container>
         <Header>
+          <Back onClick={handleBack} />
           <Title>Booking Dates</Title>
-          <BookingButton isDisabled={!Array.isArray(value)}>
-            Booking
-          </BookingButton>
+          {isBooking && (
+            <Loading src={loading} />
+          )}
+          {!isBooking && (
+            <BookingButton
+              isDisabled={value.length < 2}
+              onClick={createBooking}
+            >
+              Book
+            </BookingButton>
+          )}
         </Header>
         <Content onClick={ev => ev.stopPropagation()}>
           <CoverImage>

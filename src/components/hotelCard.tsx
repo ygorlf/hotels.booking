@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import breakfastIcon from '../assets/breakfast.png'
 import tourIcon from '../assets/tour.png'
 
+
 // Components
 import Stars from './stars'
 
@@ -160,13 +161,13 @@ const HotelCard = (props: Props) => {
   const { hotel } = props;
 
   const formatPrice = (value: number) => (
-    Intl.NumberFormat('pt-br', { style: 'currency', currency: 'USD' }).format(value)
+    Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD' }).format(value)
   );
 
   const getPrice = () => {
-    const { weekend } = hotel.prices;
+    const { price } = hotel;
 
-    return formatPrice(weekend);
+    return formatPrice(price);
   }
 
   return (
