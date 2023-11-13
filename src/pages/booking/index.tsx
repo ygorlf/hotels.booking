@@ -188,7 +188,7 @@ const BookingButton = styled.button<ButtonProps>`
   box-shadow: 2px 2px 8px var(--app-dark-transparent);
   background-color: var(--app-dark);
 
-  ${({ isDisabled }) => isDisabled &&`
+  ${({ isDisabled }) => isDisabled && `
     cursor: initial;
     opacity: 0.5;
   `}
@@ -216,19 +216,33 @@ const Booking = () => {
     }
   };
 
+  const formatPrice = (value: number) => (
+    Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD' }).format(value)
+  )
+
+  const getDays = (startDate: Date, endDate: Date) => {
+    return Math.abs(
+      Math.floor((startDate.getTime() - endDate.getTime()) / 86400000)
+    );
+  }
+
+  const getCurrentPrice = () => {
+    if (value.length < 2) return 0;
+ 
+    const days = getDays(value[0], value[1]);
+
+    return hotel.price * days;
+  }
+
   const createBooking = async () => {
     try {
       setBooking(true);
-
-      const days =  Math.abs(
-        Math.floor((value[0].getTime() - value[1].getTime()) / 86400000)
-      );
 
       await fetch(`${import.meta.env.VITE_API_URL}/booking/`, {
         method: 'POST',
         body: JSON.stringify({
           hotelId: id,
-          price: hotel.price * days,
+          price: getCurrentPrice(),
           startDate: value[0],
           endDate: value[1],
         })
@@ -238,6 +252,10 @@ const Booking = () => {
     } catch (err) {
       setBooking(false);
     }
+  }
+
+  const handleDayClick = () => {
+    if (value.length === 2) onChange([]);
   }
 
   const handleBack = () => {
@@ -280,10 +298,25 @@ const Booking = () => {
             <Row>
               <Span>{hotel.address}</Span>
             </Row>
+            <Row>
+              <Label>Daily rate:</Label>
+              <Span>{formatPrice(hotel.price)}</Span>
+            </Row>
+            <Row>
+              <Label>Days:</Label>
+              {value.length === 2 && (
+                <Span>{getDays(value[0], value[1])}</Span>
+              )}
+            </Row>
+            <Row>
+              <Label>Total Price:</Label>
+              <Span>{formatPrice(getCurrentPrice())}</Span>
+            </Row>
           </Box>
         </Content>
         <Calendar
           onChange={onChange}
+          onClickDay={handleDayClick}
           minDate={new Date()}
           selectRange={true}
         />
