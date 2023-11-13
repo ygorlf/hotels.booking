@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 // Images
 import breakfastIcon from '../assets/breakfast.png'
@@ -195,9 +196,11 @@ const HotelCard = (props: Props) => {
           <Field>Tour included</Field>
         </Box>
       </DetailsBox>
-      <BookingButton onClick={() => true}>
-        booking
-      </BookingButton>
+      <Link to={`booking/${hotel.id}`} state={hotel}>
+        <BookingButton>
+          booking
+        </BookingButton>
+      </Link>
     </Container>
   )
 }

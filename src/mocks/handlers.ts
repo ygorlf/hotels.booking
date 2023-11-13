@@ -12,6 +12,13 @@ export const handlers = [
       hotels: [...hotelsData],
     })
   }),
+  http.get('/hotels/:id', (req, res, ctx) => {
+    const selectHotel = hotelsData.find(item => item.id === req.params.id);
+
+    return HttpResponse.json({
+      ...selectHotel,
+    })
+  }),
   http.post('/reserve', (req, res, ctx) => {
     db.reserve.create({
       ...req.body,
