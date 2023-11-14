@@ -41,7 +41,7 @@ const ReserveButton = styled.button`
 const Header = () => (
   <Container>
     <Link to={'/'}>
-      <Logo src={logo} alt='logo' />
+      <Logo src={logo} alt='logo' data-testid='header-logo' />
     </Link>
     <Link to={'/books'}>
       <ReserveButton>My books</ReserveButton>

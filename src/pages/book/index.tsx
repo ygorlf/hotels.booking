@@ -290,6 +290,7 @@ const Book = () => {
             )}
             {!isBooking && (
               <BookingButton
+                data-testid='book-page-button'
                 disabled={range.length < 2}
                 isDisabled={range.length < 2}
                 onClick={() => {

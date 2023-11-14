@@ -134,7 +134,6 @@ const BookingButton = styled.button`
   position: absolute;
   bottom: 1.25rem;
   right: 1.25rem;
-  display: none;
   padding: .25rem .75rem;
   border: 2px solid var(--app-dark);
   border-radius: 8px;
@@ -171,7 +170,9 @@ const HotelCard = (props: Props) => {
   }
 
   return (
-    <Container>
+    <Container
+      data-testid='hotel-card'
+    >
       <PhotoBox>
         <Photo src={hotel.photo} alt={`imagem do hotel ${hotel.name}`} />
       </PhotoBox>
@@ -198,7 +199,7 @@ const HotelCard = (props: Props) => {
         </Box>
       </DetailsBox>
       <Link to={`book/${hotel.id}`} state={hotel}>
-        <BookingButton>
+        <BookingButton data-testid='hotel-card-button'>
           book now
         </BookingButton>
       </Link>
