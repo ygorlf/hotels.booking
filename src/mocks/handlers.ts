@@ -61,7 +61,23 @@ export const handlers = [
     });
 
     return HttpResponse.json({
-      message: 'Booking created!'
+      message: 'Book created!'
+    });
+  }),
+  http.delete('/book', async (req, res, ctx) => {
+    await delay(1000);
+    const body = await req.request.json();
+
+    db.bookings.delete({
+      where: {
+        id: {
+          equals: body.id,
+        },
+      },
+    });
+
+    return HttpResponse.json({
+      message: 'Book deleted!'
     });
   }),
 ]

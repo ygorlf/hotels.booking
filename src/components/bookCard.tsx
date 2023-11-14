@@ -8,12 +8,15 @@ import Stars from './stars'
 // Types
 import { Book } from '../types'
 
-type Props = {
-  book: Book;
+type Removing = {
+  id: string;
+  active: boolean;
 }
 
-type BoxProps = {
-  hasOpacity?: boolean;
+type Props = {
+  book: Book;
+  removing: Removing;
+  removeBook: (id: string) => void;
 }
 
 const Container = styled.li`
@@ -93,15 +96,10 @@ const City = styled.span`
   color: var(--app-text);
 `;
 
-const Box = styled.div<BoxProps>`
+const Box = styled.div`
   display: flex;
   align-items: center;
   margin: 1rem 0;
-
-  ${({ hasOpacity }) => hasOpacity && `
-    opacity: .3;
-    text-decoration: line-through;
-  `}
 `;
 
 const Label = styled.label`
@@ -143,7 +141,9 @@ const BookingButton = styled.button`
 
 
 const BookCard = (props: Props) => {
-  const { book } = props;
+  const { book, removing, removeBook } = props;
+
+  const isRemoving = removing.active && removing.id === book.id;
 
   const formatPrice = (value: number) => (
     Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD' }).format(value)
@@ -182,8 +182,11 @@ const BookCard = (props: Props) => {
           <Field>{getPrice()}</Field>
         </Box>
       </DetailsBox>
-      <BookingButton>
-        remove
+      <BookingButton
+        disabled={isRemoving}
+        onClick={() => removeBook(book.id)}
+      >
+        {isRemoving ? 'removing' : 'remove'}
       </BookingButton>
     </Container>
   )
