@@ -152,7 +152,7 @@ const BookCard = (props: Props) => {
   }
 
   return (
-    <Container>
+    <Container data-testid='book-card'>
       <PhotoBox>
         <Photo src={book.photo} alt={`imagem do hotel ${book.name}`} />
       </PhotoBox>

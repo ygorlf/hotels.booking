@@ -1,0 +1,36 @@
+{
+  "books": [
+    {
+      "id": "PHptXLTzMsGewvhNOEFih",
+      "hotelId": "2",
+      "startDate": "2023-11-14T03:00:00.000Z",
+      "endDate": "2023-11-19T02:59:59.999Z",
+      "totalPrice": 10360,
+      "name": "Copacabana Palace",
+      "address": "Av. Atlântica, 1702 - Copacabana",
+      "city": "Rio de Janeiro",
+      "state": "RJ",
+      "photo": "https://conteudo.imguol.com.br/c/entretenimento/bd/2019/03/28/belmond-copacabana-palace--rio-de-janeiro-rj-1553811162870_v2_900x506.jpg",
+      "classification": 5,
+      "breakfast": true,
+      "tour": false,
+      "price": 2072
+    },
+    {
+      "id": "mQP7dInrYFH12nYbPME3U",
+      "hotelId": "4",
+      "startDate": "2023-11-21T03:00:00.000Z",
+      "endDate": "2023-11-26T02:59:59.999Z",
+      "totalPrice": 2195,
+      "name": "Buzios Beach Resort",
+      "address": "Rua das Dunas, S/N - Praia de Tucuns",
+      "city": "Búzios",
+      "state": "RJ",
+      "photo": "https://thumbcdn-3.hotelurbano.net/VSWGkUoi11lcRFnbmq9rKakYJL8=/trim:bottom-right:80/bottom/filters:quality(50)/http%3A//media.omnibees.com/Images/5252/Property/115953.jpg",
+      "classification": 4,
+      "breakfast": true,
+      "tour": false,
+      "price": 439
+    }
+  ]
+}
