@@ -37,8 +37,8 @@ const MyBooks = () => {
   }, []);
 
   const renderHotels = () => {
-    return books.map((hotel) => (
-      <BookCard book={hotel} removing={removing} removeBook={removeBook} />
+    return books.map((book) => (
+      <BookCard book={book} removing={removing} removeBook={removeBook} />
     ))
   }
 
