@@ -1,20 +1,15 @@
 import { useEffect } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-
-// Images
-import breakfastIcon from '../assets/breakfast.png'
-import tourIcon from '../assets/tour.png'
-
+import { format } from 'date-fns'
 
 // Components
 import Stars from './stars'
 
 // Types
-import { Hotel } from '../types'
+import { Book } from '../types'
 
 type Props = {
-  hotel: Hotel;
+  book: Book;
 }
 
 type BoxProps = {
@@ -114,18 +109,8 @@ const Label = styled.label`
   color: var(--app-text);
 `;
 
-const Price = styled.span`
-  margin-left: .5rem;
-  font: 400 1rem 'Roboto', sans-serif;
-  color: var(--app-text);
-`;
-
-const Icon = styled.img`
-  width: 1.25rem;
-  margin-right: .25rem;
-`;
-
 const Field = styled.span`
+  margin-left: .5rem;
   font: 400 1rem 'Roboto', sans-serif;
   color: var(--app-text);
 `;
@@ -157,53 +142,51 @@ const BookingButton = styled.button`
 `;
 
 
-const HotelCard = (props: Props) => {
-  const { hotel } = props;
+const BookCard = (props: Props) => {
+  const { book } = props;
 
   const formatPrice = (value: number) => (
     Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD' }).format(value)
   );
 
   const getPrice = () => {
-    const { price } = hotel;
+    const { totalPrice } = book;
 
-    return formatPrice(price);
+    return formatPrice(totalPrice);
   }
 
   return (
     <Container>
       <PhotoBox>
-        <Photo src={hotel.photo} alt={`imagem do hotel ${hotel.name}`} />
+        <Photo src={book.photo} alt={`imagem do hotel ${book.name}`} />
       </PhotoBox>
       <DetailsBox>
         <BoxName>
-          <Name>{hotel.name}</Name>
+          <Name>{book.name}</Name>
           <Stars
-            classification={hotel.classification}
+            classification={book.classification}
             width='1.25rem'
           />
         </BoxName>
-        <City>{hotel.city} - {hotel.state}</City>
+        <City>{book.city} - {book.state}</City>
+        <Box>
+          <Label>Check in:</Label>
+          <Field>{format(new Date(book.startDate), 'MM/dd/YYY')}</Field>
+        </Box>
+        <Box>
+          <Label>Check out:</Label>
+          <Field>{format(new Date(book.endDate), 'MM/dd/YYY')}</Field>
+        </Box>
         <Box>
           <Label>Price: </Label>
-          <Price>{getPrice()}</Price>
-        </Box>
-        <Box hasOpacity={!hotel.breakfast}>
-          <Icon src={breakfastIcon} alt="ícone de café da manhã" />
-          <Field>Breakfast included</Field>
-        </Box>
-        <Box hasOpacity={!hotel.tour}>
-          <Icon src={tourIcon} alt="ícone de passeio" />
-          <Field>Tour included</Field>
+          <Field>{getPrice()}</Field>
         </Box>
       </DetailsBox>
-      <Link to={`book/${hotel.id}`} state={hotel}>
-        <BookingButton>
-          book now
-        </BookingButton>
-      </Link>
+      <BookingButton>
+        remove
+      </BookingButton>
     </Container>
   )
 }
 
-export default HotelCard;
+export default BookCard;

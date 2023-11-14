@@ -90,29 +90,14 @@ const Container = styled.div`
   }
 `;
 
-const Header = styled.header`
+const Footer = styled.header`
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   width: 100%;
   height: 3rem;
-  margin-bottom: 2rem;
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  color: #505050;
-  font: 400 2rem 'Open Sans', sans-serif;
-`;
-
-const Back = styled.button`
-  width: 2rem;
-  height: 2rem;
-  border: none;
-  cursor: pointer;
-  background: url(${back}) no-repeat center;
-  background-size: contain;
+  margin-top: 2rem;
 `;
 
 const Loading = styled.img`
@@ -183,10 +168,10 @@ const BookingButton = styled.button<ButtonProps>`
   font: 400 1rem 'Roboto', sans-serif;
   cursor: pointer;
   outline: none;
-  color: var(--app-white);
+  color: var(--app-dark);
   transition: all .2s;
   box-shadow: 2px 2px 8px var(--app-dark-transparent);
-  background-color: var(--app-dark);
+  background-color: var(--app-white);
 
   ${({ isDisabled }) => isDisabled && `
     cursor: initial;
@@ -242,13 +227,14 @@ const Book = () => {
         method: 'POST',
         body: JSON.stringify({
           hotelId: id,
-          price: getCurrentPrice(),
+          totalPrice: getCurrentPrice(),
           startDate: value[0],
           endDate: value[1],
         })
       });
 
       setBooking(false);
+      navigate('/books');
     } catch (err) {
       setBooking(false);
     }
@@ -258,10 +244,6 @@ const Book = () => {
     if (value.length === 2) onChange([]);
   }
 
-  const handleBack = () => {
-    navigate(-1);
-  }
-
   useEffect(() => {
     fetchHotel();
   }, []);
@@ -269,22 +251,6 @@ const Book = () => {
   const renderContent = () => {
     return (
       <Container>
-        <Header>
-          <Back onClick={handleBack} />
-          <Title>Booking Dates</Title>
-          {isBooking && (
-            <Loading src={loading} />
-          )}
-          {!isBooking && (
-            <BookingButton
-              disabled={value.length < 2}
-              isDisabled={value.length < 2}
-              onClick={createBooking}
-            >
-              Reserve now
-            </BookingButton>
-          )}
-        </Header>
         <Content onClick={ev => ev.stopPropagation()}>
           <CoverImage>
             <Image src={hotel.photo} alt='imagem do hotel' />
@@ -321,6 +287,20 @@ const Book = () => {
           minDate={new Date()}
           selectRange={true}
         />
+        <Footer>
+          {isBooking && (
+              <Loading src={loading} />
+            )}
+            {!isBooking && (
+              <BookingButton
+                disabled={value.length < 2}
+                isDisabled={value.length < 2}
+                onClick={createBooking}
+              >
+                Reserve now
+              </BookingButton>
+            )}
+        </Footer>
       </Container>
     )
   }

@@ -27,19 +27,37 @@ export const handlers = [
       ...selectHotel,
     })
   }),
-  // http.get('/bookings', (req, res, ctx) => {
-  //   const data = db.reserve.getAll();
+  http.get('/books', (req, res, ctx) => {
+    const allBooks = [];
+    const books = db.bookings.getAll();
 
-  //   return res(
-  //     ctx.status(200),
-  //     ctx.json(data),
-  //   )
-  // }),
+    books.map((book) => {
+      const hotel = db.hotels.findFirst({
+        where: {
+          id: {
+            equals: book.hotelId,
+          },
+        },
+      });
+
+      allBooks.push({
+        ...book,
+        ...hotel
+      });
+    })
+
+
+    return HttpResponse.json({
+      books: [...allBooks]
+    })
+  }),
   http.post('/booking', async (req, res, ctx) => {
     await delay(1000);
+    const body = await req.request.json();
+
     db.bookings.create({
-      ...req.body,
-      id: nanoid()
+      id: nanoid(),
+      ...body,
     });
 
     return HttpResponse.json({

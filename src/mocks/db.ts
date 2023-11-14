@@ -21,7 +21,7 @@ export const db = factory({
     hotelId: String,
     startDate: String,
     endDate: String,
-    price: Number,
+    totalPrice: Number,
   }
 })
 
