@@ -223,7 +223,7 @@ const Book = () => {
     try {
       setBooking(true);
 
-      await fetch(`${import.meta.env.VITE_API_URL}/booking/`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/booking`, {
         method: 'POST',
         body: JSON.stringify({
           hotelId: id,

@@ -6,6 +6,35 @@ import { nanoid } from 'nanoid';
 // Data
 import { hotelsData } from './data/hotels';
 
+type BookRange = {
+  startDate: number;
+  endDate: number;
+}
+
+const isTimestampInRange = (startTime: number, endTime: number, list: BookRange[]) => {
+  const startTimestamp = new Date(startTime).getTime();
+  const endTimestamp = new Date(endTime).getTime();
+
+  for (const obj of list) {
+    const startDate = obj.startDate;
+    const endDate = obj.endDate;
+
+    if (startTimestamp <= endDate && endTimestamp >= startDate) {
+      return true;
+    }
+  }
+
+  // No matching timestamp found
+  return false;
+}
+
+const getBookingsTimestamp = (bookings) => {
+  return bookings.map((book) => ({
+    startDate: new Date(book.startDate).getTime(),
+    endDate: new  Date(book.endDate).getTime()
+  }))
+}
+
 seedDatabase(hotelsData);
 
 export const handlers = [
@@ -53,16 +82,30 @@ export const handlers = [
   }),
   http.post('/booking', async (req, res, ctx) => {
     await delay(1000);
-    const body = await req.request.json();
+    try {
+      const body = await req.request.json();
+  
+      const allBookings = db.bookings.getAll();
+      const allTimestamps = getBookingsTimestamp(allBookings);
+  
+      const isAllowed = !isTimestampInRange(body.startDate, body.endDate, allTimestamps);
 
-    db.bookings.create({
-      id: nanoid(),
-      ...body,
-    });
-
-    return HttpResponse.json({
-      message: 'Book created!'
-    });
+      if (isAllowed) {
+        db.bookings.create({
+          id: nanoid(),
+          ...body,
+        });
+    
+        return HttpResponse.json({
+          message: 'Book created!'
+        });
+      } else {
+        return new HttpResponse('No overlap bookings allowed!', { status: 500 });
+      }
+      
+    } catch (err) {
+      console.log(err);
+    }
   }),
   http.delete('/book', async (req, res, ctx) => {
     await delay(1000);
