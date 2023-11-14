@@ -6,13 +6,10 @@ export const hotelsData = [
     city: 'Rio de Janeiro',
     state: 'RJ',
     photo: 'https://thumbcdn-4.hotelurbano.net/KMgrbvNwqGsuE1m5MQ2Gxi8gGrs=/trim:bottom-right:80/bottom/filters:quality(50)/https%3A//novo-hu.s3.amazonaws.com/reservas/ota/prod/hotel/1735/windsor-marapendi-hotel-004_20190625114933.jpg',
-    tour: false,
     breakfast: false,
+    tour: false,
     classification: 5,
-    prices: {
-      week: 430,
-      weekend: 362
-    },
+    price: 430,
   },
   {
     id: '2',
@@ -24,10 +21,7 @@ export const hotelsData = [
     tour: false,
     breakfast: true,
     classification: 5,
-    prices: {
-      week: 2072,
-      weekend: 1980
-    },
+    price: 2072,
   },
   {
     id: '3',
@@ -39,10 +33,7 @@ export const hotelsData = [
     tour: true,
     breakfast: false,
     classification: 4,
-    prices: {
-      week: 358,
-      weekend: 298
-    },
+    price: 358,
   },
   {
     id: '4',
@@ -54,10 +45,7 @@ export const hotelsData = [
     tour: false,
     breakfast: true,
     classification: 4,
-    prices: {
-      week: 439,
-      weekend: 702
-    },
+    price: 439,
   },
   {
     id: '5',
@@ -69,10 +57,7 @@ export const hotelsData = [
     tour: true,
     breakfast: true,
     classification: 5,
-    prices: {
-      week: 268,
-      weekend: 365
-    },
+    prices: 268,
   },
   {
     id: '6',
@@ -84,10 +69,7 @@ export const hotelsData = [
     tour: false,
     breakfast: true,
     classification: 3,
-    prices: {
-      week: 119,
-      weekend: 154
-    },
+    price: 119,
   },
   {
     id: '7',
@@ -99,10 +81,7 @@ export const hotelsData = [
     tour: false,
     breakfast: true,
     classification: 4,
-    prices: {
-      week: 90,
-      weekend: 400
-    },
+    price: 90,
   },
   {
     id: '8',
@@ -114,10 +93,7 @@ export const hotelsData = [
     tour: false,
     breakfast: true,
     classification: 5,
-    prices: {
-      week: 715,
-      weekend: 795
-    },
+    price: 715,
   },
   {
     id: '9',
@@ -129,10 +105,7 @@ export const hotelsData = [
     tour: false,
     breakfast: true,
     classification: 3,
-    prices: {
-      week: 246,
-      weekend: 693
-    },
+    price: 246,
   },
   {
     id: '10',
@@ -144,9 +117,6 @@ export const hotelsData = [
     tour: false,
     breakfast: false,
     classification: 4,
-    prices: {
-      week: 73,
-      weekend: 82
-    },
+    price: 73,
   },
 ];

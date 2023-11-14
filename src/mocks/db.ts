@@ -1,8 +1,10 @@
 // Libs
-import { factory, nullable, primaryKey } from '@mswjs/data'
+import { factory, primaryKey } from '@mswjs/data'
+
+import { Hotel } from '../types/';
 
 export const db = factory({
-  reserve: {
+  hotels: {
     id: primaryKey(String),
     name: String,
     address: String,
@@ -10,12 +12,23 @@ export const db = factory({
     state: String,
     photo: String,
     classification: Number,
-    type: (String),
-    prices: {
-      room: Number,
-      breakfast: nullable(Number),
-      tour: nullable(Number),
-      reserve: Number
-    },
+    breakfast: Boolean,
+    tour: Boolean,
+    price: Number,
   },
+  bookings: {
+    id: primaryKey(String),
+    hotelId: String,
+    startDate: String,
+    endDate: String,
+    price: Number,
+  }
 })
+
+export const seedDatabase = (data: Hotel[]) => {
+  for (let index = 0; index < data.length; index++) {
+    const element = data[index];
+    
+    db.hotels.create(element);
+  }
+}

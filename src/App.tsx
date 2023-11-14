@@ -6,11 +6,16 @@ import './App.css'
 
 // Pages
 import Home from './pages/home'
+import Booking from './pages/booking';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/booking/:id",
+    element: <Booking />,
   },
 ]);
 
