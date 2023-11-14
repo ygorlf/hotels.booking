@@ -24,8 +24,8 @@ type ButtonProps = {
 }
 
 const Page = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 4rem);
   background: linear-gradient(0deg, var(--app-dark) -10%, var(--app-light) 100%);
 `;
 
