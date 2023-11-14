@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
@@ -7,15 +7,17 @@ import 'react-calendar/dist/Calendar.css';
 
 // Images
 import loading from '../../assets/loading.svg';
-import back from '../../assets/back.svg';
 
 // Types
 import { Hotel } from '../../types';
+
+// Components
 import Stars from '../../components/stars';
 
+// Hooks
+import { useBook } from '../../hooks/useBook';
+
 type HotelType = Hotel;
-type ValueDate = Date;
-type Value = ValueDate[];
 
 type ButtonProps = {
   isDisabled: boolean;
@@ -188,11 +190,17 @@ const Error = styled.span`
 const Book = () => {
   const [hotel, setHotel] = useState<HotelType>({} as HotelType);
   const [isLoading, setLoading] = useState(false);
-  const [isBooking, setBooking] = useState(false);
-  const [value, onChange] = useState<Value>([new Date()]);
-  const [error, setError] = useState(false);
 
-  const navigate = useNavigate();
+  const {
+    isBooking,
+    value,
+    error,
+    onChange,
+    getDays,
+    getCurrentPrice,
+    createBook
+  } = useBook();
+
   const { id } = useParams();
 
   const fetchHotel = async () => {
@@ -211,43 +219,6 @@ const Book = () => {
   const formatPrice = (value: number) => (
     Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD' }).format(value)
   )
-
-  const getDays = (startDate: Date, endDate: Date) => {
-    return Math.abs(
-      Math.floor((startDate.getTime() - endDate.getTime()) / 86400000)
-    );
-  }
-
-  const getCurrentPrice = () => {
-    if (value.length < 2) return 0;
- 
-    const days = getDays(value[0], value[1]);
-
-    return hotel.price * days;
-  }
-
-  const createBooking = async () => {
-    try {
-      setBooking(true);
-      setError(false);
-
-      await fetch(`${import.meta.env.VITE_API_URL}/booking`, {
-        method: 'POST',
-        body: JSON.stringify({
-          hotelId: id,
-          totalPrice: getCurrentPrice(),
-          startDate: value[0],
-          endDate: value[1],
-        })
-      });
-
-      setBooking(false);
-      navigate('/books');
-    } catch (err) {
-      setBooking(false);
-      setError(true);
-    }
-  }
 
   const handleDayClick = () => {
     if (value.length === 2) onChange([]);
@@ -286,7 +257,7 @@ const Book = () => {
             </Row>
             <Row>
               <Label>Total Price:</Label>
-              <Span>{formatPrice(getCurrentPrice())}</Span>
+              <Span>{formatPrice(getCurrentPrice(hotel.price))}</Span>
             </Row>
           </Box>
         </Content>
@@ -308,7 +279,9 @@ const Book = () => {
               <BookingButton
                 disabled={value.length < 2}
                 isDisabled={value.length < 2}
-                onClick={createBooking}
+                onClick={() => {
+                  createBook(hotel.id, hotel.price);
+                }}
               >
                 Reserve now
               </BookingButton>
