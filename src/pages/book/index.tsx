@@ -90,16 +90,6 @@ const Container = styled.div`
   }
 `;
 
-const Footer = styled.header`
-  position: relative;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  width: 100%;
-  height: 3rem;
-  margin-top: 2rem;
-`;
-
 const Loading = styled.img`
   width: 3rem;
 `;
@@ -161,6 +151,17 @@ const Span = styled.span`
   color: var(--app-text);
 `;
 
+const Footer = styled.header`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% - 22rem);
+  height: 3rem;
+  margin-top: 2rem;
+  margin-left: auto;
+`;
+
 const BookingButton = styled.button<ButtonProps>`
   padding: .75rem 1rem;
   border: 2px solid var(--app-dark);
@@ -179,11 +180,17 @@ const BookingButton = styled.button<ButtonProps>`
   `}
 `;
 
+const Error = styled.span`
+  color: #505050;
+  font: 400 1.5rem 'Roboto', sans-serif;
+`;
+
 const Book = () => {
   const [hotel, setHotel] = useState<HotelType>({} as HotelType);
   const [isLoading, setLoading] = useState(false);
   const [isBooking, setBooking] = useState(false);
   const [value, onChange] = useState<Value>([new Date()]);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -222,8 +229,9 @@ const Book = () => {
   const createBooking = async () => {
     try {
       setBooking(true);
+      setError(false);
 
-      await fetch(`${import.meta.env.VITE_API_URL}/booking/`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/booking`, {
         method: 'POST',
         body: JSON.stringify({
           hotelId: id,
@@ -237,6 +245,7 @@ const Book = () => {
       navigate('/books');
     } catch (err) {
       setBooking(false);
+      setError(true);
     }
   }
 
@@ -288,6 +297,10 @@ const Book = () => {
           selectRange={true}
         />
         <Footer>
+          <div />
+          {error && (
+            <Error>You already booked a hotel for this date!</Error>
+          )}
           {isBooking && (
               <Loading src={loading} />
             )}
