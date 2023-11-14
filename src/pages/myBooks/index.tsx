@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 // Components
 import BookCard from '../../components/bookCard';
 
-import { Book } from '../../types/'
+// Hooks
+import { useBook } from '../../hooks/useBook';
 
 const Page = styled.div`
   width: 100vw;
@@ -29,35 +30,7 @@ const BooksList = styled.ul`
 `;
 
 const MyBooks = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [removing, setRemoving] = useState({ id: '', active: false });
-
-  const fetchBooks = async () => {
-    try {
-      const data = await (await fetch(`${import.meta.env.VITE_API_URL}/books`)).json();
-      setBooks(data.books);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const removeBook = async (id: string) => {
-    try {
-      setRemoving({ id, active: true });
-  
-      await fetch(`${import.meta.env.VITE_API_URL}/book`, {
-        method: 'DELETE',
-        body: JSON.stringify({
-          id,
-        })
-      });
-      
-      setRemoving({ id: '', active: false });
-      setBooks(books.filter(book => book.id !== id))
-    } catch (err) {
-      setRemoving({ id: '', active: false });
-    }
-  }
+  const { books, removing, fetchBooks, removeBook } = useBook();
 
   useEffect(() => {
     fetchBooks();

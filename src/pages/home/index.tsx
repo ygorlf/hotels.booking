@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 // Components
 import HotelCard from '../../components/hotelCard';
+
+// Hooks
+import { useHotel } from '../../hooks/useHotel';
 
 const Page = styled.div`
   display: flex;
@@ -30,16 +33,7 @@ const HotelsList = styled.ul`
 `;
 
 const Home = () => {
-  const [hotels, setHotels] = useState([]);
-
-  const fetchHotels = async () => {
-    try {
-      const data = await (await fetch(`${import.meta.env.VITE_API_URL}/hotels`)).json();
-      setHotels(data.hotels);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const { hotels, fetchHotels } = useHotel();
 
   useEffect(() => {
     fetchHotels();
