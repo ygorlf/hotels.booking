@@ -31,7 +31,7 @@ const isTimestampInRange = (startTime: number, endTime: number, list: BookRange[
 const getBookingsTimestamp = (bookings) => {
   return bookings.map((book) => ({
     startDate: new Date(book.startDate).getTime(),
-    endDate: new  Date(book.endDate).getTime()
+    endDate: new Date(book.endDate).getTime()
   }))
 }
 
@@ -71,7 +71,8 @@ export const handlers = [
 
       allBooks.push({
         ...book,
-        ...hotel
+        ...hotel,
+        id: book.id
       });
     })
 
@@ -84,28 +85,48 @@ export const handlers = [
     await delay(1000);
     try {
       const body = await req.request.json();
-  
+
       const allBookings = db.bookings.getAll();
       const allTimestamps = getBookingsTimestamp(allBookings);
-  
+
       const isAllowed = !isTimestampInRange(body.startDate, body.endDate, allTimestamps);
 
       if (isAllowed) {
         db.bookings.create({
-          id: nanoid(),
           ...body,
+          id: nanoid(),
         });
-    
+
         return HttpResponse.json({
           message: 'Book created!'
         });
       } else {
         return HttpResponse.error();
       }
-      
+
     } catch (err) {
       console.log(err);
     }
+  }),
+  http.patch('/book/:id', async (req, res, ctx) => {
+    await delay(1000);
+    const body = await req.request.json();
+
+    db.bookings.update({
+      where: {
+        id: {
+          equals: body.id,
+        },
+      },
+      data: {
+        startDate: body.startDate,
+        endDate: body.endDate,
+      },
+    });
+
+    return HttpResponse.json({
+      message: 'Book updated!'
+    });
   }),
   http.delete('/book', async (req, res, ctx) => {
     await delay(1000);

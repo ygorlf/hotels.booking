@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
 
@@ -13,6 +12,7 @@ import { Hotel } from '../../types';
 
 // Components
 import Stars from '../../components/stars';
+import BookCalendar from '../../components/calendar';
 
 // Hooks
 import { useBook } from '../../hooks/useBook';
@@ -24,8 +24,8 @@ type ButtonProps = {
 }
 
 const Page = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 4rem);
   background: linear-gradient(0deg, var(--app-dark) -10%, var(--app-light) 100%);
 `;
 
@@ -198,16 +198,24 @@ const Book = () => {
     onChange,
     getDays,
     getCurrentPrice,
-    createBook
+    getCalendarRange,
+    createBook,
+    patchBook,
   } = useBook();
 
   const { id } = useParams();
+  const { pathname, state } = useLocation();
+
+  const isEdit = pathname.includes('edit');
+  const pathId = isEdit ? state.book.hotelId : id;
+
+  const range = getCalendarRange();
 
   const fetchHotel = async () => {
     try {
       setLoading(true);
 
-      const data = await (await fetch(`${import.meta.env.VITE_API_URL}/hotels/${id}`)).json();
+      const data = await (await fetch(`${import.meta.env.VITE_API_URL}/hotels/${pathId}`)).json();
 
       setHotel(data);
       setLoading(false);
@@ -221,10 +229,16 @@ const Book = () => {
   )
 
   const handleDayClick = () => {
-    if (value.length === 2) onChange([]);
+    if (range.length === 2) onChange([]);
   }
 
   useEffect(() => {
+    if (isEdit) {
+      const startDate = new Date(state.book.startDate);
+      const endDate = new Date(state.book.endDate);
+      onChange([startDate, endDate]);
+    }
+
     fetchHotel();
   }, []);
 
@@ -251,8 +265,8 @@ const Book = () => {
             </Row>
             <Row>
               <Label>Days:</Label>
-              {value.length === 2 && (
-                <Span>{getDays(value[0], value[1])}</Span>
+              {range.length === 2 && (
+                <Span>{getDays(range[0], range[1])}</Span>
               )}
             </Row>
             <Row>
@@ -261,11 +275,10 @@ const Book = () => {
             </Row>
           </Box>
         </Content>
-        <Calendar
+        <BookCalendar
+          value={value}
           onChange={onChange}
-          onClickDay={handleDayClick}
-          minDate={new Date()}
-          selectRange={true}
+          onClickDay={handleDayClick}Í
         />
         <Footer>
           <div />
@@ -277,13 +290,17 @@ const Book = () => {
             )}
             {!isBooking && (
               <BookingButton
-                disabled={value.length < 2}
-                isDisabled={value.length < 2}
+                disabled={range.length < 2}
+                isDisabled={range.length < 2}
                 onClick={() => {
-                  createBook(hotel.id, hotel.price);
+                  if (isEdit) {
+                    patchBook(state.book.id);
+                  } else {
+                    createBook(hotel.id, hotel.price);
+                  }
                 }}
               >
-                Reserve now
+                {isEdit ? 'Update book' : 'Reserve now'}
               </BookingButton>
             )}
         </Footer>

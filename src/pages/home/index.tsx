@@ -11,8 +11,8 @@ const Page = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  min-height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 4rem);
   padding: 4rem 0;
   background: linear-gradient(0deg, var(--app-dark) -10%, var(--app-light) 100%);
 `;

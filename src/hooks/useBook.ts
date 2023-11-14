@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { Book } from '../types/'
 
 type ValueDate = Date;
-type Value = ValueDate[];
+type Value = ValueDate | [ValueDate, ValueDate];
 
 export const useBook = () => {
   const [isBooking, setBooking] = useState(false);
-  const [value, onChange] = useState<Value>([new Date()]);
+  const [value, onChange] = useState<Value>();
   const [error, setError] = useState(false);
 
   const [books, setBooks] = useState<Book[]>([]);
@@ -24,11 +24,21 @@ export const useBook = () => {
   }
 
   const getCurrentPrice = (price: number) => {
-    if (value.length < 2) return 0;
- 
-    const days = getDays(value[0], value[1]);
+    const range = getCalendarRange();
+
+    if (range.length < 2) return 0;
+    if (range.length === 0) return 0;
+
+    const days = getDays(range[0], range[1]);
 
     return price * days;
+  }
+
+  const getCalendarRange = () => {
+    if (!Array.isArray(value) && value) return [value];
+    if (!Array.isArray(value) && !value) return [];
+
+    return value;
   }
 
   const fetchBooks = async () => {
@@ -60,6 +70,8 @@ export const useBook = () => {
 
   const createBook = async (id: string, price: number) => {
     try {
+      const range = getCalendarRange();
+
       setBooking(true);
       setError(false);
 
@@ -68,8 +80,32 @@ export const useBook = () => {
         body: JSON.stringify({
           hotelId: id,
           totalPrice: getCurrentPrice(price),
-          startDate: value[0],
-          endDate: value[1],
+          startDate: range[0],
+          endDate: range[1],
+        })
+      });
+
+      setBooking(false);
+      navigate('/books');
+    } catch (err) {
+      setBooking(false);
+      setError(true);
+    }
+  }
+
+  const patchBook = async (id: string) => {
+    try {
+      const range = getCalendarRange();
+
+      setBooking(true);
+      setError(false);
+
+      await fetch(`${import.meta.env.VITE_API_URL}/book/:id`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          id: id,
+          startDate: range[0],
+          endDate: range[1],
         })
       });
 
@@ -92,8 +128,10 @@ export const useBook = () => {
     setError,
     getCurrentPrice,
     getDays,
-    createBook,
+    getCalendarRange,
     fetchBooks,
+    createBook,
     removeBook,
+    patchBook
   }
 }

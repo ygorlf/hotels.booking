@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { Link } from 'react-router-dom';
 import styled from 'styled-components'
 import { format } from 'date-fns'
 
@@ -35,10 +35,6 @@ const Container = styled.li`
   &:hover {
     transform: scale(1.02);
     box-shadow: 0 0 1rem var(--app-white);
-
-    button {
-      display: initial;
-    }
   }
 
   @media (max-width: 667px) {
@@ -113,11 +109,16 @@ const Field = styled.span`
   color: var(--app-text);
 `;
 
-const BookingButton = styled.button`
+const ButtonsContainer = styled.div`
   position: absolute;
   bottom: 1.25rem;
   right: 1.25rem;
-  display: none;
+  display: flex;
+  align-items: center;
+`;
+
+const BookingButton = styled.button`
+  margin: 0 0.25rem;
   padding: .25rem .75rem;
   border: 2px solid var(--app-dark);
   border-radius: 8px;
@@ -133,12 +134,7 @@ const BookingButton = styled.button`
     color: var(--app-white);
     box-shadow: 2px 2px 8px var(--app-dark-transparent);
   }
-
-  @media (max-width: 480px) {
-    display: initial;
-  }
 `;
-
 
 const BookCard = (props: Props) => {
   const { book, removing, removeBook } = props;
@@ -182,12 +178,26 @@ const BookCard = (props: Props) => {
           <Field>{getPrice()}</Field>
         </Box>
       </DetailsBox>
-      <BookingButton
-        disabled={isRemoving}
-        onClick={() => removeBook(book.id)}
-      >
-        {isRemoving ? 'removing' : 'remove'}
-      </BookingButton>
+      <ButtonsContainer>
+        <Link
+          to={`/book/edit/${book.id}`}
+          state={{
+            book
+          }}
+        >
+          <BookingButton
+            disabled={false}
+          >
+            edit
+          </BookingButton>
+        </Link>
+        <BookingButton
+          disabled={isRemoving}
+          onClick={() => removeBook(book.id)}
+        >
+          {isRemoving ? 'removing' : 'remove'}
+        </BookingButton>
+      </ButtonsContainer>
     </Container>
   )
 }

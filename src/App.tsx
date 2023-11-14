@@ -31,6 +31,15 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/book/edit/:id",
+    element: (
+      <>
+        <Header />
+        <Book />
+      </>
+    ),
+  },
+  {
     path: "/books",
     element: (
       <>
