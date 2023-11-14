@@ -100,7 +100,7 @@ export const handlers = [
           message: 'Book created!'
         });
       } else {
-        return new HttpResponse('No overlap bookings allowed!', { status: 500 });
+        return HttpResponse.error();
       }
       
     } catch (err) {
