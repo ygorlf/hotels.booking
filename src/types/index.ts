@@ -8,5 +8,22 @@ export type Hotel = {
   classification: number;
   breakfast: boolean;
   tour: boolean;
-  price: number,
+  price: number;
+}
+
+export type Book = {
+  id: string;
+  hotelId: string;
+  price: number;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+
+  // Aditional hotel properties used on book card
+  name: string;
+  photo: string;
+  state: string;
+  address: string;
+  city: string;
+  classification: number;
 }
