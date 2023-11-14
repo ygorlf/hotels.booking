@@ -6,7 +6,7 @@ import './App.css'
 
 // Pages
 import Home from './pages/home'
-import Booking from './pages/booking';
+import Book from './pages/book';
 
 const router = createBrowserRouter([
   {
@@ -14,8 +14,8 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/booking/:id",
-    element: <Booking />,
+    path: "/book/:id",
+    element: <Book />,
   },
 ]);
 

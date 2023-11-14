@@ -194,7 +194,7 @@ const BookingButton = styled.button<ButtonProps>`
   `}
 `;
 
-const Booking = () => {
+const Book = () => {
   const [hotel, setHotel] = useState<HotelType>({} as HotelType);
   const [isLoading, setLoading] = useState(false);
   const [isBooking, setBooking] = useState(false);
@@ -277,10 +277,11 @@ const Booking = () => {
           )}
           {!isBooking && (
             <BookingButton
+              disabled={value.length < 2}
               isDisabled={value.length < 2}
               onClick={createBooking}
             >
-              Book
+              Reserve now
             </BookingButton>
           )}
         </Header>
@@ -332,4 +333,4 @@ const Booking = () => {
   )
 };
 
-export default Booking;
+export default Book;

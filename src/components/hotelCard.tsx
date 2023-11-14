@@ -197,9 +197,9 @@ const HotelCard = (props: Props) => {
           <Field>Tour included</Field>
         </Box>
       </DetailsBox>
-      <Link to={`booking/${hotel.id}`} state={hotel}>
+      <Link to={`book/${hotel.id}`} state={hotel}>
         <BookingButton>
-          booking
+          Book now
         </BookingButton>
       </Link>
     </Container>
