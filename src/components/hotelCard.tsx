@@ -199,7 +199,7 @@ const HotelCard = (props: Props) => {
       </DetailsBox>
       <Link to={`book/${hotel.id}`} state={hotel}>
         <BookingButton>
-          Book now
+          book now
         </BookingButton>
       </Link>
     </Container>
